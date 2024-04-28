@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
         tagKeys.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -178,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                         for(Photo photo : addedPhotos){
                             album.addPhoto(photo);
                         }
-                        addedPhotos = new ArrayList<>();
+                        addedPhotos.clear();
                         albums.add(album);
                         saveAlbum("ERROR WHILE ADDING ALBUM");
                         Log.d("ADDED TO ALBUM",albumName);
