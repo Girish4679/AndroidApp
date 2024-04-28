@@ -55,6 +55,6 @@ public class Album {
         return Objects.hash(name);
     }
     public String toString() {
-        return "Album{" + "name='" + name + '\'' + ", photos=" + photos +'}';
+        return "Album{" + "name='" + name + '\'' + ", # photos=" + photos.size() +'}';
     }
 }

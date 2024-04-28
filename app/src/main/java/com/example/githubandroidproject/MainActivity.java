@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,6 +21,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.io.IOException;
+import java.util.List;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,13 +46,14 @@ public class MainActivity extends AppCompatActivity {
     Spinner tagKeys;
     TextView deleteAlbumText;
     TextView renameAlbumText;
+    TextView newNameAlbumText;
+    RecyclerView albumView;
     Uri selectedFile;
     private Set<Tag> tagList;
     private List<Photo> addedPhotos = new ArrayList<>();
     private List<Album> albums;
-    private ListView albumListView;
-
-
+    private RecyclerAdapter recyclerAdapter;
+    private StoreUtility storeUtility;
 
     private static final int PICK_IMAGE_REQUEST = 1;
     @Override
@@ -54,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         createAlbum = findViewById(R.id.createAlbumButton);
         choosePhoto = findViewById(R.id.choosePhotoButton);
         addPhoto = findViewById(R.id.addPhotoButton);
@@ -65,9 +71,22 @@ public class MainActivity extends AppCompatActivity {
         tagValueText = findViewById(R.id.tagValueId);
         deleteAlbumText = findViewById(R.id.deleteAlbumText);
         renameAlbumText = findViewById(R.id.renameAlbumText);
+        newNameAlbumText = findViewById(R.id.newNameAlbumText);
         tagKeys = findViewById(R.id.tagKeysId);
-        albumListView = findViewById(R.id.albumListID);
 
+        albumView = findViewById(R.id.albumID);
+        recyclerAdapter = new RecyclerAdapter(this);
+        albumView.setLayoutManager(new LinearLayoutManager(this));
+        storeUtility = new StoreUtility(this);
+
+        try{
+            albums = storeUtility.loadAlbums();
+        }catch(IOException e){
+            e.printStackTrace();
+            albums = new ArrayList<>();
+        }
+        recyclerAdapter.setAlbums(albums);
+        albumView.setAdapter(recyclerAdapter);
         createAlbumText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,7 +112,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        if(deleteAlbum != null){
+            deleteAlbum.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String albumName = deleteAlbumText.getText().toString();
+                    int index = containsName(albumName);
+                    if(index != -1){
+                        albums.remove(index);
+                        saveAlbum("ERROR WHILE REMOVING ALBUM");
+                        Log.d("DELETED ALBUM",albumName);
+                    }
 
+                }
+            });
+        }
         if(choosePhoto!=null) {
             choosePhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -135,6 +168,27 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        if(createAlbum != null){
+            createAlbum.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    String albumName = createAlbumText.getText().toString();
+                    if(albumName != null && containsName(albumName)==-1) {
+                        Album album = new Album(albumName);
+                        for(Photo photo : addedPhotos){
+                            album.addPhoto(photo);
+                        }
+                        addedPhotos = new ArrayList<>();
+                        albums.add(album);
+                        saveAlbum("ERROR WHILE ADDING ALBUM");
+                        Log.d("ADDED TO ALBUM",albumName);
+                    }
+                }
+            });
+        }
+
+
         if(addPhoto!=null)
         {
             addPhoto.setOnClickListener(new View.OnClickListener() {
@@ -160,7 +214,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+        /*
+        if(openAlbum!=null) {
+            openAlbum.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, openedAlbumActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
 
+         */
 
     }
 
@@ -171,16 +236,7 @@ public class MainActivity extends AppCompatActivity {
             selectedFile = data.getData();
         }
     }
-    private void openAlbum(Album album){
-        try
-        {
-            Intent intent = new Intent(MainActivity.this, openedAlbumActivity.class);
-            startActivity(intent);
-        }catch(Exception e)
-        {
-            Toast.makeText(MainActivity.this, "Couldn't Open Album", Toast.LENGTH_SHORT).show();
-        }
-    }
+
     /*
     public void displayAlbums() {
         ObservableList<AlbumDisplay> obsList = FXCollections.observableArrayList();
@@ -193,4 +249,21 @@ public class MainActivity extends AppCompatActivity {
 
      */
 
+    private void saveAlbum(String message){
+        try {
+            storeUtility.saveAlbums(albums);
+            recyclerAdapter.setAlbums(albums);
+        }catch(IOException e){
+            e.printStackTrace();
+            Log.d("STORE ERROR",message);
+            return;
+        }
+    }
+    private int containsName(String name){
+        for(int i = 0; i < albums.size();i++){
+            if(albums.get(i).getName().equals(name))
+                return i;
+        }
+        return -1;
+    }
 }
