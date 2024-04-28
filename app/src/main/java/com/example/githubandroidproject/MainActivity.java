@@ -10,6 +10,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -41,15 +42,15 @@ public class MainActivity extends AppCompatActivity {
     Button addTag;
     Button deleteAlbum;
     Button renameAlbum;
-    TextView createAlbumText;
-    TextView tagValueText;
+    EditText createAlbumText;
+    EditText tagValueText;
     Spinner tagKeys;
-    TextView deleteAlbumText;
-    TextView renameAlbumText;
-    TextView newNameAlbumText;
+    EditText deleteAlbumText;
+    EditText renameAlbumText;
+    EditText newNameAlbumText;
     RecyclerView albumView;
     Uri selectedFile;
-    private Set<Tag> tagList;
+    private Set<Tag> tagList = new HashSet<Tag>();
     private List<Photo> addedPhotos = new ArrayList<>();
     private List<Album> albums;
     private RecyclerAdapter recyclerAdapter;
@@ -87,31 +88,6 @@ public class MainActivity extends AppCompatActivity {
         }
         recyclerAdapter.setAlbums(albums);
         albumView.setAdapter(recyclerAdapter);
-        createAlbumText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAlbumText.setText("");
-            }
-        });
-        tagValueText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tagValueText.setText("");
-            }
-        });
-        deleteAlbumText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteAlbumText.setText("");
-            }
-        });
-        renameAlbumText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                renameAlbumText.setText("");
-            }
-        });
-
         if(deleteAlbum != null){
             deleteAlbum.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -124,6 +100,23 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("DELETED ALBUM",albumName);
                     }
 
+                }
+            });
+        }
+        if(renameAlbum!=null)
+        {
+            renameAlbum.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String newName = newNameAlbumText.getText().toString();
+                    String oldName = renameAlbumText.getText().toString();
+                    int index = containsName(oldName);
+                    if(index!=-1)
+                    {
+                        albums.get(index).setName(newName);
+                        saveAlbum("ERROR WHILE RENAMING ALBUM");
+                        Log.d("RENAMED ALBIM", oldName);
+                    }
                 }
             });
         }
@@ -154,16 +147,20 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> adap = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, keys);
         adap.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         tagKeys.setAdapter(adap);
-        if(addTag!=null)
-        {
+        if (addTag != null) {
             addTag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.d("ADDED TO ALBUM",tagValueText.getText().toString());
 
-                    String tagKey = (String)tagKeys.getSelectedItem();
-                    String tagVal = String.valueOf(tagValueText);
-                    if(tagKey != null && tagVal !=null)
-                        tagList.add(new Tag(tagKey, tagVal));
+                    if (tagKeys != null && tagValueText != null) {
+                        String tagKey = (String) tagKeys.getSelectedItem();
+                        String tagVal = tagValueText.getText().toString();
+                        if (tagKey != null && tagVal != null) {
+                            tagList.add(new Tag(tagKey, tagVal));
+                        }
+                    }
+
                     tagValueText.setText("");
                 }
             });
