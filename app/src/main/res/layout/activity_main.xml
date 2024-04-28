@@ -67,7 +67,7 @@
         android:layout_width="137dp"
         android:layout_height="50dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="200dp"
+        android:layout_marginBottom="236dp"
         android:text="Rename Album"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -89,13 +89,13 @@
         android:id="@+id/deleteAlbumText"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_marginBottom="252dp"
+        android:layout_marginBottom="292dp"
         android:ems="10"
         android:inputType="text"
         android:text="Album Name:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.079"
+        app:layout_constraintHorizontal_bias="0.004"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -106,33 +106,8 @@
         android:text="Delete Album"
         app:layout_constraintBottom_toTopOf="@+id/renameAlbumButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintHorizontal_bias="0.59"
         app:layout_constraintStart_toEndOf="@+id/deleteAlbumText" />
-
-    <EditText
-        android:id="@+id/openAlbumText"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="4dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Album Name:"
-        app:layout_constraintBottom_toTopOf="@+id/deleteAlbumText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/openAlbumButton"
-        android:layout_width="139dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="4dp"
-        android:text="Open Album"
-        app:layout_constraintBottom_toTopOf="@+id/deleteAlbumButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.532"
-        app:layout_constraintStart_toEndOf="@+id/openAlbumText" />
 
     <EditText
         android:id="@+id/createAlbumText"
@@ -151,7 +126,9 @@
         android:layout_marginTop="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/renameAlbumText" />
+        app:layout_constraintTop_toBottomOf="@+id/renameAlbumText"
+        app:layout_constraintVertical_bias="0.219" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
