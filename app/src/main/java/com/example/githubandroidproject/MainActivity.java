@@ -10,6 +10,8 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,18 +40,18 @@ public class MainActivity extends AppCompatActivity {
     Button choosePhoto;
     Button addPhoto;
     Button addTag;
-    Button openAlbum;
     Button deleteAlbum;
     Button renameAlbum;
-    TextView createAlbumText;
-    TextView tagValueText;
+    EditText createAlbumText;
+    EditText tagValueText;
     Spinner tagKeys;
-    TextView openAlbumText;
-    TextView deleteAlbumText;
-    TextView renameAlbumText;
+    Spinner keyOne, keyTwo;
+    EditText deleteAlbumText;
+    EditText renameAlbumText;
+    EditText newNameAlbumText;
     RecyclerView albumView;
     Uri selectedFile;
-    private Set<Tag> tagList;
+    private Set<Tag> tagList = new HashSet<Tag>();
     private List<Photo> addedPhotos = new ArrayList<>();
     private List<Album> albums;
     private RecyclerAdapter recyclerAdapter;
@@ -71,9 +73,12 @@ public class MainActivity extends AppCompatActivity {
         tagValueText = findViewById(R.id.tagValueId);
         deleteAlbumText = findViewById(R.id.deleteAlbumText);
         renameAlbumText = findViewById(R.id.renameAlbumText);
+        newNameAlbumText = findViewById(R.id.newNameAlbumText);
         tagKeys = findViewById(R.id.tagKeysId);
+        keyOne = findViewById(R.id.multiIDOne);
+        keyTwo = findViewById(R.id.multiIDTwo);
 
-        albumView = findViewById(R.id.albumView);
+        albumView = findViewById(R.id.albumID);
         recyclerAdapter = new RecyclerAdapter(this);
         albumView.setLayoutManager(new LinearLayoutManager(this));
         storeUtility = new StoreUtility(this);
@@ -86,31 +91,6 @@ public class MainActivity extends AppCompatActivity {
         }
         recyclerAdapter.setAlbums(albums);
         albumView.setAdapter(recyclerAdapter);
-        createAlbumText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAlbumText.setText("");
-            }
-        });
-        tagValueText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tagValueText.setText("");
-            }
-        });
-        deleteAlbumText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteAlbumText.setText("");
-            }
-        });
-        renameAlbumText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                renameAlbumText.setText("");
-            }
-        });
-
         if(deleteAlbum != null){
             deleteAlbum.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -123,6 +103,23 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("DELETED ALBUM",albumName);
                     }
 
+                }
+            });
+        }
+        if(renameAlbum!=null)
+        {
+            renameAlbum.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String newName = newNameAlbumText.getText().toString();
+                    String oldName = renameAlbumText.getText().toString();
+                    int index = containsName(oldName);
+                    if(index!=-1)
+                    {
+                        albums.get(index).setName(newName);
+                        saveAlbum("ERROR WHILE RENAMING ALBUM");
+                        Log.d("RENAMED ALBUM", oldName);
+                    }
                 }
             });
         }
@@ -148,22 +145,53 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        /*
+        keyOne.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+                Toast.makeText(MainActivity.this, "Selected Tag: " + item, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        keyTwo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+                Toast.makeText(MainActivity.this, "Selected Tag: " + item, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        */
+
         ArrayList<String> keys = new ArrayList<>();
         keys.add("Location");
         keys.add("Person");
         ArrayAdapter<String> adap = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, keys);
         adap.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         tagKeys.setAdapter(adap);
-        if(addTag!=null)
-        {
+        if (addTag != null) {
             addTag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.d("ADDED TO ALBUM",tagValueText.getText().toString());
 
-                    String tagKey = (String)tagKeys.getSelectedItem();
-                    String tagVal = String.valueOf(tagValueText);
-                    if(tagKey != null && tagVal !=null)
-                        tagList.add(new Tag(tagKey, tagVal));
+                    if (tagKeys != null && tagValueText != null) {
+                        String tagKey = (String) tagKeys.getSelectedItem();
+                        String tagVal = tagValueText.getText().toString();
+                        if (tagKey != null && tagVal != null) {
+                            tagList.add(new Tag(tagKey, tagVal));
+                        }
+                    }
+
                     tagValueText.setText("");
                 }
             });
@@ -214,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+        /*
         if(openAlbum!=null) {
             openAlbum.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -224,6 +253,8 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+         */
+
     }
 
     @Override
@@ -233,6 +264,19 @@ public class MainActivity extends AppCompatActivity {
             selectedFile = data.getData();
         }
     }
+
+    /*
+    public void displayAlbums() {
+        ObservableList<AlbumDisplay> obsList = FXCollections.observableArrayList();
+        albums.forEach((name, album) -> {
+            int numPics = album.getPhotos().size();
+            obsList.add(new AlbumDisplay(album, name, numPics));
+        });
+        albumListView.setItems(obsList);
+    }
+
+     */
+
     private void saveAlbum(String message){
         try {
             storeUtility.saveAlbums(albums);
