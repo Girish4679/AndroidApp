@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     EditText createAlbumText;
     EditText tagValueText;
     Spinner tagKeys;
+    Spinner keyOne, keyTwo;
     EditText deleteAlbumText;
     EditText renameAlbumText;
     EditText newNameAlbumText;
@@ -74,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         renameAlbumText = findViewById(R.id.renameAlbumText);
         newNameAlbumText = findViewById(R.id.newNameAlbumText);
         tagKeys = findViewById(R.id.tagKeysId);
+        keyOne = findViewById(R.id.multiIDOne);
+        keyTwo = findViewById(R.id.multiIDTwo);
 
         albumView = findViewById(R.id.albumID);
         recyclerAdapter = new RecyclerAdapter(this);
@@ -115,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         albums.get(index).setName(newName);
                         saveAlbum("ERROR WHILE RENAMING ALBUM");
-                        Log.d("RENAMED ALBIM", oldName);
+                        Log.d("RENAMED ALBUM", oldName);
                     }
                 }
             });
@@ -141,6 +144,33 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        /*
+        keyOne.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+                Toast.makeText(MainActivity.this, "Selected Tag: " + item, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        keyTwo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+                Toast.makeText(MainActivity.this, "Selected Tag: " + item, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        */
+
         ArrayList<String> keys = new ArrayList<>();
         keys.add("Location");
         keys.add("Person");
