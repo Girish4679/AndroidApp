@@ -64,6 +64,16 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+        if(addTag!=null)
+        {
+            addTag.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+
 
 
         openAlbum.setOnClickListener(new View.OnClickListener()
