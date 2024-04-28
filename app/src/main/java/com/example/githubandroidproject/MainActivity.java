@@ -16,6 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     TextView openAlbumText;
     TextView deleteAlbumText;
     TextView renameAlbumText;
+    RecyclerView albumView;
     private static final int PICK_IMAGE_REQUEST = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         deleteAlbumText = findViewById(R.id.deleteAlbumText);
         renameAlbumText = findViewById(R.id.renameAlbumText);
         tagKeys = findViewById(R.id.tagKeysId);
+        albumView = findViewById(R.id.albumView);
 
         if(choosePhoto!=null) {
             choosePhoto.setOnClickListener(new View.OnClickListener() {
