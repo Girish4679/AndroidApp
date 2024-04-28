@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,19 +33,19 @@ public class MainActivity extends AppCompatActivity {
     Button choosePhoto;
     Button addPhoto;
     Button addTag;
-    Button openAlbum;
     Button deleteAlbum;
     Button renameAlbum;
     TextView createAlbumText;
     TextView tagValueText;
     Spinner tagKeys;
-    TextView openAlbumText;
     TextView deleteAlbumText;
     TextView renameAlbumText;
     Uri selectedFile;
     private Set<Tag> tagList;
     private List<Photo> addedPhotos = new ArrayList<>();
     private List<Album> albums;
+    private ListView albumListView;
+
 
 
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -58,15 +59,14 @@ public class MainActivity extends AppCompatActivity {
         choosePhoto = findViewById(R.id.choosePhotoButton);
         addPhoto = findViewById(R.id.addPhotoButton);
         addTag = findViewById(R.id.addTagButton);
-        openAlbum = findViewById(R.id.openAlbumButton);
         deleteAlbum = findViewById(R.id.deleteAlbumButton);
         renameAlbum = findViewById(R.id.renameAlbumButton);
         createAlbumText = findViewById(R.id.createAlbumText);
         tagValueText = findViewById(R.id.tagValueId);
-        openAlbumText = findViewById(R.id.openAlbumText);
         deleteAlbumText = findViewById(R.id.deleteAlbumText);
         renameAlbumText = findViewById(R.id.renameAlbumText);
         tagKeys = findViewById(R.id.tagKeysId);
+        albumListView = findViewById(R.id.albumListID);
 
         createAlbumText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,12 +78,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 tagValueText.setText("");
-            }
-        });
-        openAlbumText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openAlbumText.setText("");
             }
         });
         deleteAlbumText.setOnClickListener(new View.OnClickListener() {
@@ -166,15 +160,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-        openAlbum.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Intent intent = new Intent(MainActivity.this, openedAlbumActivity.class);
-                startActivity(intent);
-            }
-        });
 
 
     }
@@ -186,5 +171,26 @@ public class MainActivity extends AppCompatActivity {
             selectedFile = data.getData();
         }
     }
+    private void openAlbum(Album album){
+        try
+        {
+            Intent intent = new Intent(MainActivity.this, openedAlbumActivity.class);
+            startActivity(intent);
+        }catch(Exception e)
+        {
+            Toast.makeText(MainActivity.this, "Couldn't Open Album", Toast.LENGTH_SHORT).show();
+        }
+    }
+    /*
+    public void displayAlbums() {
+        ObservableList<AlbumDisplay> obsList = FXCollections.observableArrayList();
+        albums.forEach((name, album) -> {
+            int numPics = album.getPhotos().size();
+            obsList.add(new AlbumDisplay(album, name, numPics));
+        });
+        albumListView.setItems(obsList);
+    }
+
+     */
 
 }
