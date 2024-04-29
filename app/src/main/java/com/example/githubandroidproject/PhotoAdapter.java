@@ -31,7 +31,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>
         void onPhotoSelected(List<Photo> selectedPhotos);
     }
 
-    private List<Photo> selectedPhotos = new ArrayList<>();
     private OnTagClickListener tagClickListener;
     private SlideshowInterface listener;
 
@@ -89,25 +88,14 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>
                 }
             }
         });
-        /*
-        holder.img.setOnClickListener(new View.OnClickListener() {
+
+        holder.move.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Toggle selection state of the photo
                 boolean isSelected = !photo.isSelected();
                 photo.setSelected(isSelected);
-                notifyItemChanged(position);
-                // Update the list of selected photos in the activity
-                if (isSelected) {
-                    selectedPhotos.add(photo);
-                } else {
-                    selectedPhotos.remove(photo);
-                }
-                Log.d("THE IMAGE IS SELECTED", String.valueOf(selectedPhotos.size()));
             }
         });
-
-         */
 
     }
 
@@ -126,6 +114,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>
         public TextView tags;
 
         public Button delete;
+
+        public Button move;
         // For example: public ImageView photoImageView;
 
         public ViewHolder(@NonNull View itemView) {
@@ -135,6 +125,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>
             img = itemView.findViewById(R.id.imageID);
             tags = itemView.findViewById(R.id.tagsView);
             delete = itemView.findViewById(R.id.deletePhotoButton);
+            move = itemView.findViewById(R.id.moveToggle);
         }
     }
 }

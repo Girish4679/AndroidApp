@@ -8,6 +8,7 @@ import android.transition.Slide;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -25,6 +26,7 @@ public class openedAlbumActivity extends AppCompatActivity implements SlideshowI
 
     private RecyclerView photoListView;
     Button photoAdd, photoMove, back;
+    EditText destination;
     Uri selectedFile;
     private Album selected_album;
     private StoreUtility storeUtility;
@@ -41,6 +43,7 @@ public class openedAlbumActivity extends AppCompatActivity implements SlideshowI
         photoMove = findViewById(R.id.movePhotoID);
         storeUtility = new StoreUtility(this);
         back = findViewById(R.id.backID);
+        destination = findViewById(R.id.moveDestinationID);
 
 
         Intent intent = getIntent();
@@ -87,33 +90,52 @@ public class openedAlbumActivity extends AppCompatActivity implements SlideshowI
                 }
             });
         }
-        /*
-        if(photoMove!=null) {
-            photoMove.setOnClickListener(new View.OnClickListener() {
+        if(photoMove!=null)
+        {
+            photoMove.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View v) {
-                    // Iterate through selected photos and move them to the desired album
-                    for (Photo photo : selectedPhotos) {
-                        // Move photo to the desired album
-                        // Update your data structure accordingly
-                        // For example:
-                        selected_album.removePhoto(photo);
-                        newAlbum.addPhoto(photo);
+                public void onClick(View v)
+                {
+                    String destinationAlbumName = destination.getText().toString();
+                    Log.d("INONCLICK", destinationAlbumName);
+                    if (containsAlbum(albums, destinationAlbumName)) {
+                        Log.d("MOVEDALBUM", String.valueOf(albums.size()));
+                        // Get the destination album from the list of albums
+                        Album destinationAlbum = null;
+                        for (Album album : albums) {
+                            if (album.getName().equals(destinationAlbumName)) {
+                                destinationAlbum = album;
+                                break;
+                            }
+                        }
+                        // Move selected photos to the destination album
+                        if (destinationAlbum != null) {
+                            for (Photo p : selected_album.getPhotos()) {
+                                if (p.isSelected()) {
+                                    // Remove photo from the current album
+                                    selected_album.removePhoto(p);
+                                    // Add photo to the destination album
+                                    destinationAlbum.addPhoto(p);
+                                }
+                            }
+                            // Save changes
+                            saveAlbum("Error while moving photos");
+
+                            // Update UI
+                            displayPhotos(selected_album);
+                        } else {
+                            // Handle case where destination album is not found
+                            Toast.makeText(openedAlbumActivity.this, "Destination album not found", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        // Handle case where destination album name is invalid
+                        Toast.makeText(openedAlbumActivity.this, "Invalid destination album name", Toast.LENGTH_SHORT).show();
                     }
-
-                    // Clear the list of selected photos
-                    selectedPhotos.clear();
-
-                    // Save the changes to albums
-                    saveAlbum("ERROR WHILE MOVING PHOTOS");
-
-                    // Refresh the RecyclerView
-                    displayPhotos(selected_album);
                 }
             });
-        }
 
-         */
+        }
 
 
     }
@@ -185,13 +207,14 @@ public class openedAlbumActivity extends AppCompatActivity implements SlideshowI
         return -1;
     }
 
-
-
-
-
-
-
-
+    public boolean containsAlbum(List<Album> albums, String albumName) {
+        for (Album album : albums) {
+            if (album.getName().equalsIgnoreCase(albumName)) {
+                return true; // Found a matching album
+            }
+        }
+        return false; // No matching album found
+    }
 
     @Override
     public void onPhotoClick(List<Photo> photos, int index){
