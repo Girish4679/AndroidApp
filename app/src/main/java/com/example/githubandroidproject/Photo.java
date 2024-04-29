@@ -16,6 +16,7 @@ import java.util.Set;
 public class Photo implements Serializable {
     private String filePath;
     private Set<Tag> tags;
+    private boolean selected = false;
     public Photo(String filePath){
         this.filePath = filePath;
         this.tags = new HashSet<>();
@@ -37,6 +38,15 @@ public class Photo implements Serializable {
     }
     public void addTag(Tag tag){
         tags.add(tag);
+    }
+
+    public boolean isSelected()
+    {
+        return selected;
+    }
+    public void setSelected(boolean var)
+    {
+        selected = var;
     }
 
     public void removeTag(Tag tag){
