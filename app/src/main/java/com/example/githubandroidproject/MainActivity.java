@@ -3,6 +3,7 @@ package com.example.githubandroidproject;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
@@ -437,7 +438,15 @@ public class MainActivity extends AppCompatActivity {
 
         return tagValues;
     }
-
+    private void searchPhotos(List<Photo> photos) {
+        try {
+            Intent intent = new Intent(MainActivity.this, searchActivity.class);
+            intent.putParcelableArrayListExtra("photos", new ArrayList<Photo>(photos)); // No cast needed
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace(); // Log or handle the exception appropriately
+        }
+    }
     /*
     private void searchPhotos(List<Photo> photos)
     {
@@ -455,6 +464,7 @@ public class MainActivity extends AppCompatActivity {
             CommonUtil.errorGUI("Couldn't open photos");
         }
     }
+
 
      */
 }
