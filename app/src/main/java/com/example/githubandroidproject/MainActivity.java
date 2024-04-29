@@ -152,7 +152,10 @@ public class MainActivity extends AppCompatActivity implements AlbumClickInterfa
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setType("image/*");
+                    intent.setFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+                            | Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     startActivityForResult(intent, PICK_IMAGE_REQUEST);
                 }
             });
@@ -389,6 +392,10 @@ public class MainActivity extends AppCompatActivity implements AlbumClickInterfa
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             selectedFile = data.getData();
+            final int takeFlags = data.getFlags()
+                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            getContentResolver().takePersistableUriPermission(selectedFile, takeFlags);
         }
     }
 
