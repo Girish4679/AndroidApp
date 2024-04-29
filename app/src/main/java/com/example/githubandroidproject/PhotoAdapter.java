@@ -19,7 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
-public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> {
+public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>
+{
     private List<Photo> photos;
     private Context context;
     public interface OnTagClickListener {
@@ -31,17 +32,15 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
 
     private List<Photo> selectedPhotos = new ArrayList<>();
     private OnTagClickListener tagClickListener;
+    private SlideshowInterface listener;
 
-    public PhotoAdapter(Context context, List<Photo> photos, OnTagClickListener listener) {
+    public PhotoAdapter(Context context, List<Photo> photos, OnTagClickListener listener, SlideshowInterface sListen) {
         this.context = context;
         this.photos = photos;
         this.tagClickListener = listener;
-    private SlideshowInterface listener;
-    public PhotoAdapter(Context context, List<Photo> photos,SlideshowInterface listener) {
-        this.context = context;
-        this.photos = photos;
-        this.listener = listener;
+        this.listener = sListen;
     }
+
 
     @NonNull
     @Override
@@ -81,7 +80,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         // For example: holder.photoImageView.setImageResource(photo.getResId());
         // You'll need to replace 'photo.getResId()' with the appropriate method to retrieve the photo resource
 
-
+        /*
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

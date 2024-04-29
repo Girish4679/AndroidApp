@@ -119,7 +119,6 @@ public class openedAlbumActivity extends AppCompatActivity implements SlideshowI
             displayPhotos(selected_album);
         }
     }
-
     private void displayPhotos(Album album) {
         List<Photo> photos = new ArrayList<>();
         if (album != null) {
@@ -137,7 +136,7 @@ public class openedAlbumActivity extends AppCompatActivity implements SlideshowI
                 // Update the adapter with the modified list of photos
                 adapter.updatePhotos(photos);
             }
-        });
+        }, null);
         PhotoAdapter adapter = new PhotoAdapter(this,photos,this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         photoListView.setLayoutManager(layoutManager);
