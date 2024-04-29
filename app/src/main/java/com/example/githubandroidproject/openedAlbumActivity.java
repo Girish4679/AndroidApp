@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.transition.Slide;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,10 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class openedAlbumActivity extends AppCompatActivity
+public class openedAlbumActivity extends AppCompatActivity implements SlideshowInterface
 {
 
     private RecyclerView photoListView;
@@ -44,6 +46,7 @@ public class openedAlbumActivity extends AppCompatActivity
         Intent intent = getIntent();
         albums = (List<Album>) intent.getSerializableExtra("albums_list");
         selected_album = (Album) intent.getSerializableExtra("selected_album");
+        Log.d("SELECTED_ALBUM", selected_album.getName());
         displayPhotos(selected_album);
 
 
@@ -135,6 +138,7 @@ public class openedAlbumActivity extends AppCompatActivity
                 adapter.updatePhotos(photos);
             }
         });
+        PhotoAdapter adapter = new PhotoAdapter(this,photos,this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         photoListView.setLayoutManager(layoutManager);
         photoListView.setAdapter(adapter);
@@ -166,5 +170,14 @@ public class openedAlbumActivity extends AppCompatActivity
 
 
 
+    @Override
+    public void onPhotoClick(List<Photo> photos, int index){
 
+        Intent intent = new Intent(this, SlideshowActivity.class);
+        intent.putExtra("photos", (Serializable) photos);
+        intent.putExtra("albums_list",(Serializable) albums);
+        intent.putExtra("album", (Serializable) selected_album);
+        intent.putExtra("index", index);
+        startActivity(intent);
+    }
 }

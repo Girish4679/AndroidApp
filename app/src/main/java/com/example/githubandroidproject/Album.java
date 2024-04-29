@@ -1,16 +1,18 @@
 package com.example.githubandroidproject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 public class Album implements Serializable {
     private String name;
-    private Set<Photo> photos;
+    private List<Photo> photos;
     public Album(String name){
         this.name = name;
-        this.photos = new HashSet<>();
+        this.photos = new ArrayList<>();
     }
 
     public String getName(){
@@ -21,17 +23,18 @@ public class Album implements Serializable {
         name = newName;
     }
 
-    public Set<Photo> getPhotos(){
+    public List<Photo> getPhotos(){
         return photos;
     }
-
     public Photo findPhoto(Photo photo){
         for(Photo p : photos){
             if(p.equals(photo)) return p;
         }
         return null;
     }
-
+    public void setPhotos(List<Photo> photos){
+        this.photos = photos;
+    }
     public void addPhoto(Photo photo){
         photos.add(photo);
     }

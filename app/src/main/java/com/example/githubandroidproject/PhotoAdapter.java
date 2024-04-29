@@ -36,6 +36,11 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         this.context = context;
         this.photos = photos;
         this.tagClickListener = listener;
+    private SlideshowInterface listener;
+    public PhotoAdapter(Context context, List<Photo> photos,SlideshowInterface listener) {
+        this.context = context;
+        this.photos = photos;
+        this.listener = listener;
     }
 
     @NonNull
@@ -64,6 +69,14 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
             tagBuilder.setLength(tagBuilder.length() - 2);
         }
         holder.tags.setText(tagBuilder.toString());
+        holder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener != null) {
+                    listener.onPhotoClick(photos,position);
+                }
+            }
+        });
         // Bind photo data to views in ViewHolder
         // For example: holder.photoImageView.setImageResource(photo.getResId());
         // You'll need to replace 'photo.getResId()' with the appropriate method to retrieve the photo resource
