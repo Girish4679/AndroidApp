@@ -34,7 +34,7 @@ public class searchActivity extends AppCompatActivity {
         Intent intent = getIntent();
         albums = (List<Album>) intent.getSerializableExtra("albums_list");
         selected_photos = (List<Photo>) intent.getSerializableExtra("selected_photos");
-        //displayPhotos(selected_album);
+        displayPhotos();
 
         if(back!=null)
         {
@@ -49,31 +49,13 @@ public class searchActivity extends AppCompatActivity {
 
     }
 
-    /*
-    private void displayPhotos(Album album) {
-        List<Photo> photos = new ArrayList<>();
-        if (album != null) {
-            photos.addAll(album.getPhotos());
-        }
-        Log.d("PHOTOS", photos.toString());
-        Log.d("PHOTOS", String.valueOf(photos.size()));
-        adapter = new PhotoAdapter(this, photos, new PhotoAdapter.OnTagClickListener() {
-            @Override
-            public void onDeleteClicked(Photo photo) {
-                selected_album.removePhoto(photo);
-                photos.remove(photo);
-                Log.d("DELETEPHOTO", String.valueOf(selected_album.getPhotos().size()));
-                saveAlbum("ERROR WHILE DELETING PHOTO");
-                // Update the adapter with the modified list of photos
-                adapter.updatePhotos(photos);
-            }
-        }, this);
-        //PhotoAdapter adapter = new PhotoAdapter(this,photos,this, this);
+    private void displayPhotos() {
+        //Log.d("PHOTOS", photos.toString());
+        //Log.d("PHOTOS", String.valueOf(photos.size()));
+        searchAdapter adapter = new searchAdapter(this,selected_photos);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         photoListView.setLayoutManager(layoutManager);
         photoListView.setAdapter(adapter);
     }
-
-     */
 }
 

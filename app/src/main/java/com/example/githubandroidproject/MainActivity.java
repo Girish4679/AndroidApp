@@ -229,7 +229,8 @@ public class MainActivity extends AppCompatActivity implements AlbumClickInterfa
         }
         if(search!=null)
         {
-            search.setOnClickListener(new View.OnClickListener() {
+            search.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
                 public void onClick(View v)
                 {
@@ -457,14 +458,18 @@ public class MainActivity extends AppCompatActivity implements AlbumClickInterfa
         return tagValues;
     }
 
-    private void searchPhotos(List<Photo> photos)
-    {
-        Log.d("SELECTEDPHOTOS", String.valueOf(photos.size()));
-        Intent intent = new Intent(this, searchActivity.class);
-        intent.putExtra("selected_photos", (Serializable) photos);
-        intent.putExtra("albums_list",(Serializable) this.albums);
-        startActivity(intent);
+    private void searchPhotos(List<Photo> photos) {
+        try {
+            Log.d("SELECTEDPHOTOS", String.valueOf(photos.size()));
+            Intent intent = new Intent(this, searchActivity.class);
+            intent.putExtra("selected_photos", (Serializable) photos);
+            intent.putExtra("albums_list",(Serializable) this.albums);
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.e("SEARCH_ACTIVITY_ERROR", "Error launching search activity", e);
+        }
     }
+
 
 
 
