@@ -76,4 +76,30 @@
         app:layout_constraintTop_toBottomOf="@+id/photoImageView"
         app:layout_constraintVertical_bias="0.645" />
 
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back to Album"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/nextButton"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toEndOf="@+id/previousButton"
+        app:layout_constraintTop_toBottomOf="@+id/photoImageView"
+        app:layout_constraintVertical_bias="0.874" />
+
+    <TextView
+        android:id="@+id/tagsListView"
+        android:layout_width="121dp"
+        android:layout_height="85dp"
+        android:maxHeight="100dp"
+        android:scrollbars="vertical"
+        android:text="TEST TEST SET ETS TS ET"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.976"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.775" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

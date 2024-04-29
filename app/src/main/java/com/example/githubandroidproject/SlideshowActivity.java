@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -13,11 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 public class SlideshowActivity extends AppCompatActivity {
@@ -29,6 +32,8 @@ public class SlideshowActivity extends AppCompatActivity {
     private Photo currentPhoto;
     private List<Album> albums;
     private Album album;
+    private Button back;
+    private TextView tagsView;
     StoreUtility storeUtility;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,8 @@ public class SlideshowActivity extends AppCompatActivity {
         Button removeTagButton = findViewById(R.id.removeTagButton);
         Button previousButton = findViewById(R.id.previousButton);
         Button nextButton = findViewById(R.id.nextButton);
+        Button back = findViewById(R.id.backButton);
+        tagsView = findViewById(R.id.tagsListView);
         ArrayList<String> keys = new ArrayList<>();
         keys.add("Location");
         keys.add("Person");
@@ -63,6 +70,18 @@ public class SlideshowActivity extends AppCompatActivity {
         nextButton.setOnClickListener(v -> navigatePhoto(1));
         addTagButton.setOnClickListener(v -> addTag());
         removeTagButton.setOnClickListener(v -> removeTag());
+        if(back!=null)
+        {
+            back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(SlideshowActivity.this, openedAlbumActivity.class);
+                    intent.putExtra("selected_album", album);
+                    intent.putExtra("albums_list",(Serializable) albums);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     private void displayPhoto(int index) {
@@ -72,6 +91,13 @@ public class SlideshowActivity extends AppCompatActivity {
                 InputStream inputStream = getContentResolver().openInputStream(Uri.parse(currentPhoto.getPath()));
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 photoImageView.setImageBitmap(bitmap);
+                StringBuilder tagBuilder = new StringBuilder();
+                for (Tag tag : currentPhoto.getTags()) { // Assuming getTags() returns a Collection<String>
+                    tagBuilder.append(tag.getName()+": "+tag.getValue()).append("\n");
+                }
+                tagsView.setMovementMethod(new ScrollingMovementMethod());
+                tagsView.setText(tagBuilder.toString());
+                Log.d("TEXT DISPLAYS",tagsView.getText().toString());
             }catch(FileNotFoundException e){
                 e.printStackTrace();
             }
@@ -94,10 +120,12 @@ public class SlideshowActivity extends AppCompatActivity {
         if (!tagValue.isEmpty()) {
             Tag newTag = new Tag(tagName, tagValue);
             photos.get(currentPhotoIndex).addTag(newTag);
+            album.setPhotos(photos);
             albums.get(albums.indexOf(album)).setPhotos(photos);
             saveAlbum("COULDNT ADD TAG");
             Toast.makeText(this, "Tag added", Toast.LENGTH_SHORT).show();
             tagValueEditText.setText(""); // Clear the input field
+            displayPhoto(currentPhotoIndex);
         } else {
             Toast.makeText(this, "Tag value cannot be empty", Toast.LENGTH_SHORT).show();
         }
@@ -121,9 +149,11 @@ public class SlideshowActivity extends AppCompatActivity {
                 if(tag.equals(newTag)){
                     photos.get(currentPhotoIndex).removeTag(newTag);
                     albums.get(albums.indexOf(album)).setPhotos(photos);
+                    album.setPhotos(photos);
                     saveAlbum("COULDNT ADD TAG");
                     Toast.makeText(this, "Tag removed", Toast.LENGTH_SHORT).show();
                     tagValueEditText.setText(""); // Clear the input field
+                    displayPhoto(currentPhotoIndex);
                     return;
                 }
             }

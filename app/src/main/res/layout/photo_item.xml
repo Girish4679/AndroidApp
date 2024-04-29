@@ -25,11 +25,13 @@
 
         <TextView
             android:id="@+id/tagsView"
-            android:layout_width="61dp"
-            android:layout_height="27dp"
+            android:layout_width="108dp"
+            android:layout_height="81dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="28dp"
+            android:maxHeight="100dp"
+            android:scrollbars="vertical"
             android:text="TextView"
-            app:layout_constraintEnd_toStartOf="@+id/deletePhotoButton"
             app:layout_constraintStart_toEndOf="@+id/imageID"
             app:layout_constraintTop_toTopOf="parent" />
 
