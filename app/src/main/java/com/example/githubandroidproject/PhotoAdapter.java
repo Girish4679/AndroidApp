@@ -80,7 +80,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>
         // For example: holder.photoImageView.setImageResource(photo.getResId());
         // You'll need to replace 'photo.getResId()' with the appropriate method to retrieve the photo resource
 
-        /*
+
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +90,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>
                 }
             }
         });
-        /*
+
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,8 +107,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>
                 Log.d("THE IMAGE IS SELECTED", String.valueOf(selectedPhotos.size()));
             }
         });
-
-         */
 
     }
 

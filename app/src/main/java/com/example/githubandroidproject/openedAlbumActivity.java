@@ -136,8 +136,8 @@ public class openedAlbumActivity extends AppCompatActivity implements SlideshowI
                 // Update the adapter with the modified list of photos
                 adapter.updatePhotos(photos);
             }
-        }, null);
-        PhotoAdapter adapter = new PhotoAdapter(this,photos,this);
+        }, this);
+        //PhotoAdapter adapter = new PhotoAdapter(this,photos,this, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         photoListView.setLayoutManager(layoutManager);
         photoListView.setAdapter(adapter);
