@@ -54,8 +54,8 @@
         android:id="@+id/addTagButton"
         android:layout_width="176dp"
         android:layout_height="50dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:text="Add Tag"
         app:layout_constraintStart_toEndOf="@+id/tagValueId"
         app:layout_constraintTop_toBottomOf="@+id/tagKeysId" />
@@ -127,8 +127,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/albumID"
-        android:layout_width="415dp"
-        android:layout_height="241dp"
+        android:layout_width="405dp"
+        android:layout_height="254dp"
         android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="@+id/newNameAlbumText"
         app:layout_constraintHorizontal_bias="0.833"
@@ -146,38 +146,59 @@
         app:layout_constraintTop_toBottomOf="@+id/deleteAlbumText" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/spinnerTwo"
         android:layout_width="124dp"
         android:layout_height="37dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/renameAlbumText" />
 
     <Spinner
-        android:id="@+id/spinner2"
+        android:id="@+id/spinnerThree"
         android:layout_width="124dp"
         android:layout_height="34dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerTwo" />
 
-    <MultiAutoCompleteTextView
-        android:id="@+id/multiIDOne"
-        android:layout_width="206dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="72dp"
-        android:hint="Tag Value:"
+    <Button
+        android:id="@+id/searchID"
+        android:layout_width="125dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="8dp"
+        android:text="Search"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newNameAlbumText" />
+
+    <EditText
+        android:id="@+id/conjunctionID"
+        android:layout_width="114dp"
+        android:layout_height="39dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="and/or"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newNameAlbumText" />
+
+    <AutoCompleteTextView
+        android:id="@+id/autoOne"
+        android:layout_width="141dp"
+        android:layout_height="47dp"
+        android:completionThreshold="1"
+        android:hint="Tag Value:"
+        app:layout_constraintEnd_toStartOf="@+id/conjunctionID"
+        app:layout_constraintStart_toEndOf="@+id/spinnerTwo"
         app:layout_constraintTop_toBottomOf="@+id/renameAlbumText" />
 
-    <MultiAutoCompleteTextView
-        android:id="@+id/multiIDTwo"
-        android:layout_width="209dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="68dp"
+    <AutoCompleteTextView
+        android:id="@+id/autoTwo"
+        android:layout_width="137dp"
+        android:layout_height="43dp"
+        android:completionThreshold="1"
         android:hint="Tag Value:"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/multiIDOne" />
+        app:layout_constraintEnd_toStartOf="@+id/searchID"
+        app:layout_constraintStart_toEndOf="@+id/spinnerThree"
+        app:layout_constraintTop_toBottomOf="@+id/autoOne" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

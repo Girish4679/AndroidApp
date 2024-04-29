@@ -4,14 +4,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import java.util.ArrayList;
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     Button addTag;
     Button deleteAlbum;
     Button renameAlbum;
+    Button search;
     EditText createAlbumText;
     EditText tagValueText;
     Spinner tagKeys;
@@ -49,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
     EditText deleteAlbumText;
     EditText renameAlbumText;
     EditText newNameAlbumText;
+    EditText conjunctionText;
+    AutoCompleteTextView autoTextOne, autoTextTwo;
+
     RecyclerView albumView;
     Uri selectedFile;
     private Set<Tag> tagList = new HashSet<Tag>();
@@ -69,14 +77,25 @@ public class MainActivity extends AppCompatActivity {
         addTag = findViewById(R.id.addTagButton);
         deleteAlbum = findViewById(R.id.deleteAlbumButton);
         renameAlbum = findViewById(R.id.renameAlbumButton);
+        search = findViewById(R.id.searchID);
         createAlbumText = findViewById(R.id.createAlbumText);
         tagValueText = findViewById(R.id.tagValueId);
         deleteAlbumText = findViewById(R.id.deleteAlbumText);
         renameAlbumText = findViewById(R.id.renameAlbumText);
+        renameAlbumText.setInputType(InputType.TYPE_NULL);
         newNameAlbumText = findViewById(R.id.newNameAlbumText);
+        newNameAlbumText.setInputType(InputType.TYPE_NULL);
+        conjunctionText = findViewById(R.id.conjunctionID);
+        conjunctionText.setInputType(InputType.TYPE_NULL);
         tagKeys = findViewById(R.id.tagKeysId);
-        keyOne = findViewById(R.id.multiIDOne);
-        keyTwo = findViewById(R.id.multiIDTwo);
+        keyOne = findViewById(R.id.spinnerTwo);
+        keyTwo = findViewById(R.id.spinnerThree);
+
+        autoTextOne = findViewById(R.id.autoOne);
+        autoTextOne.setInputType(InputType.TYPE_NULL);
+        autoTextTwo = findViewById(R.id.autoTwo);
+        autoTextTwo.setInputType(InputType.TYPE_NULL);
+
 
         albumView = findViewById(R.id.albumID);
         recyclerAdapter = new RecyclerAdapter(this);
@@ -101,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                         albums.remove(index);
                         saveAlbum("ERROR WHILE REMOVING ALBUM");
                         Log.d("DELETED ALBUM",albumName);
+                        deleteAlbumText.setText("");
                     }
 
                 }
@@ -119,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
                         albums.get(index).setName(newName);
                         saveAlbum("ERROR WHILE RENAMING ALBUM");
                         Log.d("RENAMED ALBUM", oldName);
+                        renameAlbumText.setText("");
+                        newNameAlbumText.setText("");
                     }
                 }
             });
@@ -144,12 +166,11 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        /*
+
         keyOne.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
-                Toast.makeText(MainActivity.this, "Selected Tag: " + item, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -161,7 +182,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
-                Toast.makeText(MainActivity.this, "Selected Tag: " + item, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -169,14 +189,19 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        */
-
         ArrayList<String> keys = new ArrayList<>();
+        keys.add("");
         keys.add("Location");
         keys.add("Person");
         ArrayAdapter<String> adap = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, keys);
         adap.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         tagKeys.setAdapter(adap);
+        keyOne.setAdapter(adap);
+        keyTwo.setAdapter(adap);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, getTagList());
+        autoTextOne.setAdapter(adapter);
+        autoTextTwo.setAdapter(adapter);
+
         if (addTag != null) {
             addTag.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -190,8 +215,107 @@ public class MainActivity extends AppCompatActivity {
                             tagList.add(new Tag(tagKey, tagVal));
                         }
                     }
-
+                    tagKeys.setSelection(0);
                     tagValueText.setText("");
+                }
+            });
+        }
+        if(search!=null)
+        {
+            search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v)
+                {
+                    String tagName1 = (String) keyOne.getSelectedItem();
+                    String tagName2 = (String) keyTwo.getSelectedItem();
+                    String tagVal1 = autoTextOne.getText().toString();
+                    String tagVal2 = autoTextTwo.getText().toString();
+                    String conjunction = conjunctionText.getText().toString();
+                    List<Photo> photos = new ArrayList<Photo>();
+                    for(Album a : albums)
+                    {
+                        for(Photo p : a.getPhotos())
+                        {
+                            photos.add(p);
+                        }
+                    }
+                    List<Photo> selectedPhotos = new ArrayList<>();
+                    if(!tagName1.equals("") && !tagVal1.equals("") && !tagName2.equals("") && !tagVal2.equals(""))
+                    {
+                        for(Photo p : photos)
+                        {
+                            if(conjunction.equalsIgnoreCase("and"))
+                            {
+                                boolean hasTag1 = false;
+                                boolean hasTag2 = false;
+                                for(Tag t : p.getTags())
+                                {
+                                    if(t.getName().equalsIgnoreCase(tagName1) && t.getValue().equalsIgnoreCase(tagVal1))
+                                    {
+                                        hasTag1 = true;
+                                    }
+                                    else if(t.getName().equalsIgnoreCase(tagName2) && t.getValue().equalsIgnoreCase(tagVal2))
+                                    {
+                                        hasTag2 = true;
+                                    }
+                                    if(hasTag1 && hasTag2)
+                                    {
+                                        selectedPhotos.add(p);
+                                        break;
+                                    }
+                                }
+                            }
+                            else if(conjunction.equalsIgnoreCase("or"))
+                            {
+                                for(Tag t : p.getTags())
+                                {
+                                    if(t.getName().equalsIgnoreCase(tagName1) && t.getValue().equalsIgnoreCase(tagVal1))
+                                    {
+                                        selectedPhotos.add(p);
+                                    }
+                                    if(t.getName().equalsIgnoreCase(tagName2) && t.getValue().equalsIgnoreCase(tagVal2))
+                                    {
+                                        selectedPhotos.add(p);
+                                    }
+                                }
+                            }
+                        }
+                        if(selectedPhotos.isEmpty())
+                        {
+                            Toast.makeText(MainActivity.this, "No Photos in Range!", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            //searchPhotos(selectedPhotos);
+                        }
+                    }
+                    else if((!tagName1.equals("") && !tagVal1.equals("")) || (!tagName2.equals("") && !tagVal2.equals("")))
+                    {
+                        for(Photo p : photos)
+                        {
+                            for(Tag t : p.getTags())
+                            {
+                                if((!tagName1.equals("") && !tagVal1.equals("") && t.getName().equalsIgnoreCase(tagName1) && t.getValue().equalsIgnoreCase(tagVal1))
+                                        || (!tagName2.equals("") && !tagVal2.equals("") && t.getName().equalsIgnoreCase(tagName2) && t.getValue().equalsIgnoreCase(tagVal2)))
+                                {
+                                    selectedPhotos.add(p);
+                                }
+                            }
+                        }
+                        if(selectedPhotos.isEmpty())
+                        {
+                            Toast.makeText(MainActivity.this, "No Photos in Range!", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            //searchPhotos(selectedPhotos);
+                        }
+                    }
+                    autoTextOne.setText("");
+                    autoTextTwo.setText("");
+                    keyOne.setSelection(0);
+                    keyTwo.setSelection(0);
+                    conjunctionText.setText("");
                 }
             });
         }
@@ -210,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
                         albums.add(album);
                         saveAlbum("ERROR WHILE ADDING ALBUM");
                         Log.d("ADDED TO ALBUM",albumName);
+                        createAlbumText.setText("");
                     }
                 }
             });
@@ -293,4 +418,43 @@ public class MainActivity extends AppCompatActivity {
         }
         return -1;
     }
+    private ArrayList<String> getTagList() {
+        ArrayList<String> tagValues = new ArrayList<>();
+
+        for (Album a : albums) {
+            for (Photo p : a.getPhotos()) {
+                // Check if p.getTags() returns a collection (e.g., List<Tag>)
+                if (p.getTags() instanceof Collection) {
+                    // Extract tag values from the collection and add to tagValues
+                    for (Tag tag : (Collection<Tag>) p.getTags()) {
+                        tagValues.add(tag.getValue()); // Assuming Tag has a getValue() method to get the string value
+                    }
+                } else if (p.getTags() != null) { // Handle single Tag object (if applicable)
+                    tagValues.add(((Tag) p.getTags()).getValue()); // Assuming Tag is a single object
+                }
+            }
+        }
+
+        return tagValues;
+    }
+
+    /*
+    private void searchPhotos(List<Photo> photos)
+    {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SearchDisplayView.fxml"));
+            Parent root = loader.load();
+            SearchDisplayController controller = loader.getController();
+            controller.initUser(user, photos);
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) albumListView.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        }catch(Exception e){
+            e.printStackTrace();
+            CommonUtil.errorGUI("Couldn't open photos");
+        }
+    }
+
+     */
 }
