@@ -13,7 +13,7 @@ public class searchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         Intent intent = getIntent();
-
+        /*
         List<Photo> photos = intent.getParcelableArrayListExtra("photos");
 
         // Use the photos list for displaying or processing search results
@@ -22,6 +22,8 @@ public class searchActivity extends AppCompatActivity {
         } else {
             // Handle the case where photos are not passed
         }
+
+         */
     }
 }
 
