@@ -1,8 +1,9 @@
 package com.example.githubandroidproject;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Tag {
+public class Tag implements Serializable {
     private String tagName;
     private String tagValue;
     public Tag(String tagName, String tagValue){

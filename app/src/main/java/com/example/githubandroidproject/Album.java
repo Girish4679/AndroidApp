@@ -1,10 +1,11 @@
 package com.example.githubandroidproject;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Album {
+public class Album implements Serializable {
     private String name;
     private Set<Photo> photos;
     public Album(String name){
