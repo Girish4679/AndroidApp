@@ -1,6 +1,8 @@
 package com.example.githubandroidproject;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +16,12 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<AlbumViewHolder>{
     List<Album> albums;
     private Context context;
+    private AlbumClickInterface listener;
 
-    public RecyclerAdapter(Context context){
+    public RecyclerAdapter(Context context, AlbumClickInterface listener){
         this.context = context;
         albums = new ArrayList<>();
+        this.listener = listener;
     }
     public void setAlbums(List<Album> albums){
         this.albums = albums;
@@ -39,10 +43,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<AlbumViewHolder>{
         viewHolder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(v.hasOnClickListeners()){
-                    return;
+                if(listener != null) {
+                    listener.onAlbumClick(album);
                 }
-                System.out.println("Double click");
             }
         });
     }

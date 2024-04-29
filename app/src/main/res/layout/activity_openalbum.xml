@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/photoView"
         android:layout_width="401dp"
         android:layout_height="287dp"
         app:layout_constraintBottom_toBottomOf="parent"

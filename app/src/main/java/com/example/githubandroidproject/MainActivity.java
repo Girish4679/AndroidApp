@@ -26,6 +26,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ import java.util.List;
 import java.util.Set;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AlbumClickInterface{
 
     Button createAlbum;
     Button choosePhoto;
@@ -75,11 +77,11 @@ public class MainActivity extends AppCompatActivity {
         renameAlbumText = findViewById(R.id.renameAlbumText);
         newNameAlbumText = findViewById(R.id.newNameAlbumText);
         tagKeys = findViewById(R.id.tagKeysId);
-        keyOne = findViewById(R.id.multiIDOne);
-        keyTwo = findViewById(R.id.multiIDTwo);
+        //keyOne = findViewById(R.id.multiIDOne);
+        //keyTwo = findViewById(R.id.multiIDTwo);
 
         albumView = findViewById(R.id.albumID);
-        recyclerAdapter = new RecyclerAdapter(this);
+        recyclerAdapter = new RecyclerAdapter(this,this);
         albumView.setLayoutManager(new LinearLayoutManager(this));
         storeUtility = new StoreUtility(this);
 
@@ -127,7 +129,8 @@ public class MainActivity extends AppCompatActivity {
             choosePhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
                     startActivityForResult(intent, PICK_IMAGE_REQUEST);
                 }
             });
@@ -293,5 +296,13 @@ public class MainActivity extends AppCompatActivity {
                 return i;
         }
         return -1;
+    }
+    @Override
+    public void onAlbumClick(Album album){
+
+        Intent intent = new Intent(this, openedAlbumActivity.class);
+        intent.putExtra("selected_album", album);
+        intent.putExtra("albums_list",(Serializable) this.albums);
+        startActivity(intent);
     }
 }

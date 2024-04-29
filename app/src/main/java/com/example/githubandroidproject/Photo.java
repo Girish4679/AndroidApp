@@ -1,9 +1,10 @@
 package com.example.githubandroidproject;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Photo {
+public class Photo implements Serializable {
     private String filePath;
     private Set<Tag> tags;
     public Photo(String filePath){
