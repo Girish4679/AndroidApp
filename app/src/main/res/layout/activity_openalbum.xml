@@ -27,9 +27,10 @@
         android:id="@+id/movePhotoID"
         android:layout_width="196dp"
         android:layout_height="63dp"
+        android:layout_marginTop="4dp"
         android:text="Move Photo(Select Photos)"
         app:layout_constraintEnd_toEndOf="@+id/moveDestinationID"
-        app:layout_constraintHorizontal_bias="0.023"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/moveDestinationID" />
 
@@ -43,8 +44,8 @@
 
     <EditText
         android:id="@+id/moveDestinationID"
-        android:layout_width="402dp"
-        android:layout_height="45dp"
+        android:layout_width="396dp"
+        android:layout_height="57dp"
         android:layout_marginTop="80dp"
         android:ems="10"
         android:hint="Destination to Move:"
