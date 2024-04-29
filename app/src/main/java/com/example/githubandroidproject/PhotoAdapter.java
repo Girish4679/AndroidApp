@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,9 +64,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>
         for (Tag tag : photo.getTags()) { // Assuming getTags() returns a Collection<String>
             tagBuilder.append(tag.getName()+": "+tag.getValue()).append("\n");
         }
-        if (tagBuilder.length() > 0) {
-            tagBuilder.setLength(tagBuilder.length() - 2);
-        }
+        holder.tags.setMovementMethod(new ScrollingMovementMethod());
         holder.tags.setText(tagBuilder.toString());
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override

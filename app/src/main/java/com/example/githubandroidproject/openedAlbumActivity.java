@@ -47,8 +47,20 @@ public class openedAlbumActivity extends AppCompatActivity implements SlideshowI
 
 
         Intent intent = getIntent();
-        albums = (List<Album>) intent.getSerializableExtra("albums_list");
+        try{
+            albums = storeUtility.loadAlbums();
+            Log.d("ALBUM LOADED","ALBUM LOADED");
+        } catch (IOException e) {
+            Log.d("ALBUM DIDNT LOAD","ALBUM Didnt load");
+            albums = (List<Album>) intent.getSerializableExtra("albums_list");
+        }
         selected_album = (Album) intent.getSerializableExtra("selected_album");
+        String selected_name = selected_album.getName();
+        for(Album album : albums){
+            if(album.getName().equals(selected_name)){
+                selected_album = album;
+            }
+        }
         Log.d("SELECTED_ALBUM", selected_album.getName());
         displayPhotos(selected_album);
 
@@ -59,7 +71,10 @@ public class openedAlbumActivity extends AppCompatActivity implements SlideshowI
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setType("image/*");
+                    intent.setFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+                            | Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     startActivityForResult(intent, PICK_IMAGE_REQUEST);
 
                 }
@@ -129,6 +144,10 @@ public class openedAlbumActivity extends AppCompatActivity implements SlideshowI
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             selectedFile = data.getData();
+            final int takeFlags = data.getFlags()
+                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            getContentResolver().takePersistableUriPermission(selectedFile, takeFlags);
             Toast.makeText(openedAlbumActivity.this, "Photo Added!" + selectedFile, Toast.LENGTH_SHORT).show();
             selected_album.addPhoto(new Photo(selectedFile.toString()));
             for (int i = 0; i < albums.size(); i++) {
@@ -154,6 +173,11 @@ public class openedAlbumActivity extends AppCompatActivity implements SlideshowI
                 selected_album.removePhoto(photo);
                 photos.remove(photo);
                 Log.d("DELETEPHOTO", String.valueOf(selected_album.getPhotos().size()));
+                for(int i = 0;i<albums.size();i++){
+                    if(albums.get(i).getName().equals(selected_album.getName())){
+                        albums.get(i).setPhotos(photos);
+                    }
+                }
                 saveAlbum("ERROR WHILE DELETING PHOTO");
                 // Update the adapter with the modified list of photos
                 adapter.updatePhotos(photos);
