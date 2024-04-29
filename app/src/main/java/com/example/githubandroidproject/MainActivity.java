@@ -68,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements AlbumClickInterfa
     private RecyclerAdapter recyclerAdapter;
     private StoreUtility storeUtility;
 
+    private List<String> locationTags;
+    private List<String> peopleTags;
+
     private static final int PICK_IMAGE_REQUEST = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -442,7 +445,8 @@ public class MainActivity extends AppCompatActivity implements AlbumClickInterfa
         ArrayList<String> tagValues = new ArrayList<>();
 
         for (Album a : albums) {
-            for (Photo p : a.getPhotos()) {
+            for (Photo p : a.getPhotos())
+            {
                 // Check if p.getTags() returns a collection (e.g., List<Tag>)
                 if (p.getTags() instanceof Collection) {
                     // Extract tag values from the collection and add to tagValues
@@ -457,7 +461,6 @@ public class MainActivity extends AppCompatActivity implements AlbumClickInterfa
 
         return tagValues;
     }
-
     private void searchPhotos(List<Photo> photos) {
         try {
             Log.d("SELECTEDPHOTOS", String.valueOf(photos.size()));
