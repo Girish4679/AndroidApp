@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements AlbumClickInterfa
                         }
                         else
                         {
-                            //searchPhotos(selectedPhotos);
+                            searchPhotos(selectedPhotos);
                         }
                     }
                     else if((!tagName1.equals("") && !tagVal1.equals("")) || (!tagName2.equals("") && !tagVal2.equals("")))
@@ -315,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements AlbumClickInterfa
                         }
                         else
                         {
-                            //searchPhotos(selectedPhotos);
+                            searchPhotos(selectedPhotos);
                         }
                     }
                     autoTextOne.setText("");
@@ -456,34 +456,18 @@ public class MainActivity extends AppCompatActivity implements AlbumClickInterfa
 
         return tagValues;
     }
-    /*
-    private void searchPhotos(List<Photo> photos) {
-        try {
-            Intent intent = new Intent(MainActivity.this, searchActivity.class);
-            intent.putParcelableArrayListExtra("photos", new ArrayList<Photo>(photos)); // No cast needed
-            startActivity(intent);
-        } catch (Exception e) {
-            e.printStackTrace(); // Log or handle the exception appropriately
-        }
-    }
-    /*
+
     private void searchPhotos(List<Photo> photos)
     {
-        try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SearchDisplayView.fxml"));
-            Parent root = loader.load();
-            SearchDisplayController controller = loader.getController();
-            controller.initUser(user, photos);
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) albumListView.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        }catch(Exception e){
-            e.printStackTrace();
-            CommonUtil.errorGUI("Couldn't open photos");
-        }
+        Log.d("SELECTEDPHOTOS", String.valueOf(photos.size()));
+        Intent intent = new Intent(this, searchActivity.class);
+        intent.putExtra("selected_photos", (Serializable) photos);
+        intent.putExtra("albums_list",(Serializable) this.albums);
+        startActivity(intent);
     }
 
 
-     */
+
+
+
 }
