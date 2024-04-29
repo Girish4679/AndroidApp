@@ -90,7 +90,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>
                 }
             }
         });
-
+        /*
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,6 +107,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>
                 Log.d("THE IMAGE IS SELECTED", String.valueOf(selectedPhotos.size()));
             }
         });
+
+         */
 
     }
 
