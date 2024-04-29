@@ -1,8 +1,8 @@
 package com.example.githubandroidproject;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.List;
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> {
     private List<Photo> photos;
     private Context context;
@@ -37,11 +35,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position)
     {
         Photo photo = photos.get(position);
-        Picasso.get()
-                .load(Uri.parse(photo.getPath()))
-                .placeholder(R.drawable.placeholder) // Optional: Displayed while the image is loading
-                .error(R.drawable.error) // Optional: Displayed if there's an error loading the image
-                .into(holder.img);
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(Uri.parse(photo.getPath()));
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            holder.img.setImageBitmap(bitmap);
+        }catch(FileNotFoundException e){
+            e.printStackTrace();
+        }
         StringBuilder tagBuilder = new StringBuilder();
         for (Tag tag : photo.getTags()) { // Assuming getTags() returns a Collection<String>
             tagBuilder.append(tag.getName()+": "+tag.getValue()).append("\n");

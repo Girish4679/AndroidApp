@@ -41,5 +41,4 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.google.code.gson:gson:2.8.6")
-    implementation("com.squareup.picasso:picasso:2.71828")
 }

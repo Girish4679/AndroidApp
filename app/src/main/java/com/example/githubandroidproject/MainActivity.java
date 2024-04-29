@@ -194,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements AlbumClickInterfa
             }
         });
         ArrayList<String> keys = new ArrayList<>();
-        keys.add("");
         keys.add("Location");
         keys.add("Person");
         ArrayAdapter<String> adap = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, keys);
